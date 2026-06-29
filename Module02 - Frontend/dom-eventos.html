@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  MANIPULAÇÃO DO DOM E EVENTOS — JavaScript dando vida à página
+  ============================================================================
+
+  Até aqui o HTML foi ESTÁTICO. O DOM (Document Object Model) é a "ponte" que
+  o navegador cria entre o seu HTML e o JavaScript: ele transforma cada tag em
+  um OBJETO que você pode ler, alterar, criar e apagar em tempo real.
+
+  E os EVENTOS são os "gatilhos": clique, digitação, envio de formulário, mouse
+  passando por cima... Quando algo acontece, o JS REAGE. É assim que a página
+  deixa de ser um cartaz e vira um aplicativo.
+
+  Grave estes conceitos — eles sustentam 90% do JS no navegador:
+
+  1) SELECIONAR um elemento (achar a tag no DOM):
+       • document.querySelector('.classe')    -> o PRIMEIRO que casar (usa seletor CSS).
+       • document.querySelectorAll('.classe') -> TODOS que casarem (lista/NodeList).
+       • document.getElementById('id')        -> direto pelo id (clássico e rápido).
+
+  2) ALTERAR um elemento já selecionado:
+       • .textContent      -> troca o TEXTO (forma segura).
+       • .innerHTML        -> troca o HTML interno (cuidado: interpreta tags!).
+       • .value            -> lê/escreve o conteúdo de inputs.
+       • .classList.add/remove/toggle -> liga/desliga classes CSS.
+       • .style.cor        -> mexe no estilo inline direto (use com parcimônia).
+       • .setAttribute()   -> muda atributos (href, src, disabled...).
+
+  3) REAGIR a eventos:
+       • elemento.addEventListener('click', funcao) -> a forma MODERNA e correta.
+       • A função recebe um objeto "event" com tudo sobre o que aconteceu.
+       • event.preventDefault() -> cancela o comportamento padrão (ex.: form recarregar).
+
+  4) CRIAR e REMOVER elementos:
+       • document.createElement('li') -> cria um nó novo (ainda fora da tela).
+       • pai.appendChild(no)          -> "pendura" o nó dentro de um elemento.
+       • no.remove()                  -> apaga o nó da página.
+
+  Tudo abaixo é INTERATIVO: clique, digite e veja o JavaScript reagindo!
+  ============================================================================
+-->
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"> <!-- Codificação UTF-8 (acentos corretos). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsividade em celulares. -->
+    <title>DOM e Eventos - Aula Comentada</title>
+    <style>
+        /* ===================================================================
+           ESTILOS GERAIS (apenas para a página ficar legível)
+           =================================================================== */
+        * {
+            box-sizing: border-box; /* Largura/altura já incluem padding e borda (vide a aula de Box Model). */
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        h1 { font-size: 1.6rem; }
+
+        /* Título de cada demonstração. */
+        h2 {
+            font-size: 1.1rem;
+            margin: 32px 0 4px;
+            color: #2c3e50;
+        }
+
+        /* Pequena legenda explicando o que observar em cada demo. */
+        .legenda {
+            margin: 0 0 8px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* "Cartão" que envolve cada demonstração. */
+        .demo {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 8px;
+        }
+
+        /* Botões padrão das demos. */
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 6px;
+        }
+        button:hover { background-color: #2c80b4; }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        /*
+          Classe CSS que será LIGADA/DESLIGADA pelo JavaScript via classList.toggle.
+          O JS não precisa saber CÓMO destacar — ele só adiciona/remove a classe,
+          e o CSS cuida da aparência. Essa separação é uma boa prática essencial.
+        */
+        .destaque {
+            background-color: #f1c40f;
+            color: #2c3e50;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* Lista de tarefas da Demo 5. */
+        ul { padding-left: 20px; }
+        li { margin-bottom: 4px; cursor: pointer; }
+        li.feito { text-decoration: line-through; color: #999; } /* "Tarefa concluída". */
+
+        .saida {
+            font-family: monospace;
+            background-color: #2c3e50;
+            color: #2ecc71;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 8px;
+            min-height: 20px;
+        }
+
+        .caixa-mouse {
+            background-color: #ecf0f1;
+            border: 2px dashed #bbb;
+            padding: 24px;
+            text-align: center;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>DOM e Eventos na prática</h1>
+    <p class="legenda">Tudo aqui é interativo. Abra o <strong>Console do navegador (F12)</strong> para acompanhar também as mensagens de log.</p>
+
+    <!-- ===================== DEMO 1: selecionar e alterar texto ===================== -->
+    <div class="demo">
+        <h2>1) Selecionar e alterar — querySelector + textContent</h2>
+        <p class="legenda">O JS encontra o parágrafo e troca o texto dele ao clicar.</p>
+
+        <p id="alvo-texto">Texto original (ainda não fui alterado).</p>
+        <button id="btn-trocar-texto">Trocar o texto</button>
+    </div>
+
+    <!-- ===================== DEMO 2: ligar/desligar classe CSS ===================== -->
+    <div class="demo">
+        <h2>2) classList.toggle — ligar e desligar uma classe</h2>
+        <p class="legenda">O botão alterna a classe <code>.destaque</code>. O JS decide QUANDO; o CSS decide COMO.</p>
+
+        <p id="alvo-destaque">Clique no botão para me destacar (e depois remover).</p>
+        <button id="btn-destaque">Alternar destaque</button>
+    </div>
+
+    <!-- ===================== DEMO 3: ler input em tempo real (input) ===================== -->
+    <div class="demo">
+        <h2>3) Evento input — reagir à digitação em tempo real</h2>
+        <p class="legenda">Digite no campo: o espelho abaixo atualiza a CADA tecla, sem precisar enviar nada.</p>
+
+        <input type="text" id="campo-nome" placeholder="Digite seu nome...">
+        <div class="saida" id="espelho">Aguardando...</div>
+    </div>
+
+    <!-- ===================== DEMO 4: eventos de mouse ===================== -->
+    <div class="demo">
+        <h2>4) Eventos de mouse — mouseenter, mouseleave e o objeto event</h2>
+        <p class="legenda">Passe o mouse sobre a caixa e clique nela: o JS lê as coordenadas do clique pelo <code>event</code>.</p>
+
+        <div class="caixa-mouse" id="caixa">Passe o mouse aqui e clique.</div>
+        <div class="saida" id="saida-mouse">Coordenadas do último clique aparecerão aqui.</div>
+    </div>
+
+    <!-- ===================== DEMO 5: criar/remover elementos + delegação ===================== -->
+    <div class="demo">
+        <h2>5) Criar e remover elementos — createElement, appendChild e delegação</h2>
+        <p class="legenda">Adicione tarefas. <strong>Clique</strong> numa tarefa para concluí-la; <strong>clique duplo</strong> para removê-la.</p>
+
+        <input type="text" id="campo-tarefa" placeholder="Nova tarefa...">
+        <button id="btn-add-tarefa">Adicionar</button>
+        <ul id="lista-tarefas">
+            <li>Tarefa de exemplo (clique para concluir, duplo-clique para apagar)</li>
+        </ul>
+    </div>
+
+    <!-- ===================== DEMO 6: formulário com preventDefault ===================== -->
+    <div class="demo">
+        <h2>6) Evento submit — preventDefault para tratar o form com JS</h2>
+        <p class="legenda">Sem <code>preventDefault()</code>, o navegador recarregaria a página. Nós impedimos e tratamos no JS.</p>
+
+        <form id="form-login">
+            <input type="text" id="campo-usuario" placeholder="Usuário" required>
+            <button type="submit">Entrar</button>
+        </form>
+        <div class="saida" id="saida-form">O resultado do envio aparecerá aqui.</div>
+    </div>
+
+    <!--
+      ========================================================================
+      O JAVASCRIPT
+      ========================================================================
+      Colocamos o <script> no FINAL do <body> de propósito: assim, quando o JS
+      roda, todo o HTML acima JÁ FOI carregado e os elementos existem no DOM.
+      (Se o script estivesse no <head>, querySelector retornaria null!)
+      ========================================================================
+    -->
+    <script>
+
+        // ====================================================================
+        // DEMO 1 — Selecionar um elemento e alterar seu texto
+        // ====================================================================
+
+        // querySelector aceita QUALQUER seletor CSS. Aqui usamos o id (#).
+        const alvoTexto = document.querySelector('#alvo-texto')
+        const btnTrocar = document.querySelector('#btn-trocar-texto')
+
+        // addEventListener: "quando ocorrer 'click' neste botão, execute esta função".
+        btnTrocar.addEventListener('click', function () {
+            // .textContent troca apenas o TEXTO (não interpreta HTML — é o seguro).
+            alvoTexto.textContent = 'Texto alterado pelo JavaScript! ' + new Date().toLocaleTimeString()
+        })
+
+
+        // ====================================================================
+        // DEMO 2 — Ligar/desligar uma classe CSS com classList.toggle
+        // ====================================================================
+
+        const alvoDestaque = document.querySelector('#alvo-destaque')
+
+        document.querySelector('#btn-destaque').addEventListener('click', function () {
+            // toggle: se a classe existe, REMOVE; se não existe, ADICIONA.
+            // Toda a aparência fica no CSS (.destaque); o JS só liga o "interruptor".
+            alvoDestaque.classList.toggle('destaque')
+        })
+
+
+        // ====================================================================
+        // DEMO 3 — Ler um input em tempo real com o evento 'input'
+        // ====================================================================
+
+        const campoNome = document.querySelector('#campo-nome')
+        const espelho = document.querySelector('#espelho')
+
+        // 'input' dispara a CADA mudança no campo (cada tecla). Diferente de
+        // 'change', que só dispara quando o campo perde o foco.
+        campoNome.addEventListener('input', function (event) {
+            // event.target é o elemento que disparou o evento (o próprio input).
+            // .value é o texto atual digitado.
+            const texto = event.target.value
+
+            // Operador ternário: mostra o texto OU um aviso quando vazio.
+            espelho.textContent = texto ? `Você digitou: ${texto}` : 'Aguardando...'
+        })
+
+
+        // ====================================================================
+        // DEMO 4 — Eventos de mouse e o objeto 'event'
+        // ====================================================================
+
+        const caixa = document.querySelector('#caixa')
+        const saidaMouse = document.querySelector('#saida-mouse')
+
+        // mouseenter: o ponteiro ENTROU na caixa.
+        caixa.addEventListener('mouseenter', function () {
+            caixa.style.backgroundColor = '#d6eaf8' // Mexendo no estilo inline diretamente.
+            caixa.textContent = 'O mouse está sobre mim!'
+        })
+
+        // mouseleave: o ponteiro SAIU da caixa.
+        caixa.addEventListener('mouseleave', function () {
+            caixa.style.backgroundColor = '' // String vazia remove o estilo inline (volta ao CSS).
+            caixa.textContent = 'Passe o mouse aqui e clique.'
+        })
+
+        // click: o objeto 'event' carrega as coordenadas do clique na tela.
+        caixa.addEventListener('click', function (event) {
+            // offsetX/offsetY = posição do clique DENTRO do elemento clicado.
+            saidaMouse.textContent = `Clique em x=${event.offsetX}, y=${event.offsetY} (dentro da caixa)`
+            console.log('Evento de clique completo:', event) // Inspecione no console (F12)!
+        })
+
+
+        // ====================================================================
+        // DEMO 5 — Criar/remover elementos + DELEGAÇÃO DE EVENTOS
+        // ====================================================================
+
+        const campoTarefa = document.querySelector('#campo-tarefa')
+        const listaTarefas = document.querySelector('#lista-tarefas')
+
+        // Função que CRIA um <li> novo a partir do texto digitado.
+        function adicionarTarefa() {
+            const texto = campoTarefa.value.trim()
+
+            // Guarda de segurança: não adiciona tarefa vazia.
+            if (texto === '') {
+                alert('Digite uma tarefa antes de adicionar.')
+                return
+            }
+
+            // 1) Cria o elemento (ainda "solto", fora da tela).
+            const li = document.createElement('li')
+            // 2) Define o conteúdo de texto do novo nó.
+            li.textContent = texto
+            // 3) "Pendura" o novo <li> dentro da <ul> (agora ele aparece).
+            listaTarefas.appendChild(li)
+
+            // Limpa o campo para a próxima tarefa.
+            campoTarefa.value = ''
+        }
+
+        document.querySelector('#btn-add-tarefa').addEventListener('click', adicionarTarefa)
+
+        // DELEGAÇÃO DE EVENTOS — conceito MUITO importante:
+        // Em vez de colocar um listener em CADA <li> (inclusive nos que ainda
+        // nem existem), colocamos UM listener na <ul> PAI. Como os eventos
+        // "borbulham" (bubbling) do filho para o pai, o pai descobre qual <li>
+        // foi clicado através de event.target. Funciona até para itens criados
+        // DEPOIS — é eficiente e à prova de futuro.
+
+        // Clique simples: marca/desmarca a tarefa como concluída.
+        listaTarefas.addEventListener('click', function (event) {
+            // Só reage se o que foi clicado for de fato um <li>.
+            if (event.target.tagName === 'LI') {
+                event.target.classList.toggle('feito')
+            }
+        })
+
+        // Clique duplo: remove a tarefa da lista.
+        listaTarefas.addEventListener('dblclick', function (event) {
+            if (event.target.tagName === 'LI') {
+                event.target.remove() // Apaga o nó do DOM.
+            }
+        })
+
+
+        // ====================================================================
+        // DEMO 6 — Formulário: submit + preventDefault
+        // ====================================================================
+
+        const formLogin = document.querySelector('#form-login')
+        const campoUsuario = document.querySelector('#campo-usuario')
+        const saidaForm = document.querySelector('#saida-form')
+
+        // O evento 'submit' é do FORM (não do botão). Dispara ao clicar em
+        // "Entrar" OU ao apertar Enter dentro do campo.
+        formLogin.addEventListener('submit', function (event) {
+            // SEM esta linha, o navegador RECARREGARIA a página (comportamento
+            // padrão de um form), e perderíamos tudo. preventDefault() cancela isso.
+            event.preventDefault()
+
+            // Agora tratamos os dados nós mesmos, em JavaScript.
+            const usuario = campoUsuario.value.trim()
+            saidaForm.textContent = `Bem-vindo(a), ${usuario}! (form tratado sem recarregar a página)`
+
+            formLogin.reset() // Limpa o formulário.
+        })
+
+    </script>
+
+</body>
+</html>

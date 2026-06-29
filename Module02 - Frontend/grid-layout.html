@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  CSS GRID LAYOUT (Grid de Duas Dimensões)
+  ============================================================================
+
+  Se o Flexbox pensa em UMA dimensão por vez (uma linha OU uma coluna), o Grid
+  pensa nas DUAS ao mesmo tempo: linhas E colunas, formando uma malha (grade).
+  É a ferramenta ideal para o "esqueleto" da página (header, sidebar, conteúdo,
+  footer) e para galerias/dashboards alinhados nos dois eixos.
+
+  Grave estes conceitos — eles explicam quase todo o Grid:
+
+  1) Mesma ideia de "papéis" do Flexbox:
+       • O CONTAINER (o pai) -> recebe "display: grid". É quem desenha a grade.
+       • Os ITENS (filhos diretos) -> ocupam as células dessa grade.
+
+  2) Você DESENHA a grade no container com duas propriedades:
+       • grid-template-columns -> define quantas COLUNAS e a largura de cada uma.
+       • grid-template-rows    -> define quantas LINHAS e a altura de cada uma.
+
+  3) Unidades e funções que você verá o tempo todo:
+       • fr        -> "fração" do espaço livre. 1fr 1fr = duas colunas iguais.
+       • repeat()  -> repete um padrão: repeat(3, 1fr) = 1fr 1fr 1fr.
+       • gap       -> espaço (calha) ENTRE linhas e colunas.
+       • minmax()  -> tamanho mínimo e máximo de uma trilha: minmax(150px, 1fr).
+       • auto-fit / auto-fill -> deixam o navegador decidir QUANTAS colunas cabem.
+
+  4) Para POSICIONAR um item específico na grade:
+       • grid-column / grid-row -> dizem em quais linhas-guia o item começa/termina.
+         Ex.: grid-column: 1 / 3  -> ocupa da linha-guia 1 até a 3 (2 colunas).
+         Ex.: grid-column: span 2 -> ocupa 2 colunas a partir de onde estiver.
+
+  Dica de ouro:
+       "Flexbox distribui o que JÁ existe numa linha; Grid CONSTRÓI a malha
+        e encaixa os itens nas células."
+
+  Mexa nos valores e recarregue a página para ver a grade mudar!
+  ============================================================================
+-->
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"> <!-- Codificação UTF-8 (acentos corretos). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsividade em celulares. -->
+    <title>CSS Grid - Aula Comentada</title>
+    <style>
+        /* ===================================================================
+           ESTILOS GERAIS (apenas para a página ficar legível; não é Grid)
+           =================================================================== */
+        * {
+            box-sizing: border-box; /* Largura/altura já incluem padding e borda (vide a aula de Box Model). */
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        h1 { font-size: 1.6rem; }
+
+        /* Título de cada demonstração. */
+        h2 {
+            font-size: 1.1rem;
+            margin: 32px 0 4px;
+            color: #2c3e50;
+        }
+
+        /* Pequena legenda explicando o que observar em cada demo. */
+        .legenda {
+            margin: 0 0 8px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /*
+          ESTILO COMUM DE TODO "CONTAINER GRID".
+          A classe ".grid" abaixo é só base visual; o que de fato ativa o Grid
+          é "display: grid", aplicado em cada demo. A borda tracejada e o fundo
+          existem só para ENXERGARMOS os limites da grade.
+        */
+        .grid {
+            display: grid;            /* <<< A LINHA QUE LIGA O GRID. Sem ela, nada do resto funciona. */
+            border: 2px dashed #999;  /* Contorno tracejado para vermos a "caixa-pai". */
+            background-color: #fff;
+            padding: 8px;
+            gap: 8px;                 /* gap = calha ENTRE as células (linhas e colunas). */
+        }
+
+        /*
+          ESTILO COMUM DE TODO "ITEM GRID" (os filhos do container).
+          Caixinhas coloridas e numeradas só para visualizarmos onde cada uma
+          cai dentro da grade.
+        */
+        .item {
+            background-color: #3498db;
+            color: #fff;
+            padding: 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* ===================================================================
+           DEMO 1 — grid-template-columns (define as COLUNAS da grade)
+           =================================================================== */
+        .demo-columns {
+            grid-template-columns: 1fr 1fr 1fr;
+            /*
+              Três colunas de tamanho IGUAL (cada uma = 1 fração do espaço livre).
+              A unidade "fr" divide o espaço disponível em partes proporcionais.
+              Os itens preenchem a grade automaticamente, da esquerda para a
+              direita, pulando de linha quando as colunas acabam.
+            */
+        }
+
+        /* ===================================================================
+           DEMO 2 — colunas de tamanhos DIFERENTES (mistura fr, px e %)
+           =================================================================== */
+        .demo-mixed {
+            grid-template-columns: 200px 1fr 2fr;
+            /*
+              1ª coluna FIXA em 200px; o que sobrar é dividido em 3 partes:
+              a 2ª coluna pega 1 parte (1fr) e a 3ª pega 2 partes (2fr).
+              Ou seja, a 3ª coluna fica com o DOBRO da largura da 2ª.
+              Padrão clássico de "sidebar fixa + conteúdo elástico".
+            */
+        }
+
+        /* ===================================================================
+           DEMO 3 — repeat() (atalho para repetir trilhas)
+           =================================================================== */
+        .demo-repeat {
+            grid-template-columns: repeat(4, 1fr);
+            /*
+              repeat(4, 1fr) é EXATAMENTE igual a "1fr 1fr 1fr 1fr".
+              Quanto mais colunas, mais o repeat() economiza digitação e evita erros.
+            */
+        }
+
+        /* ===================================================================
+           DEMO 4 — linhas + posicionamento (grid-column / grid-row / span)
+           Aqui também definimos as LINHAS e mandamos itens OCUPAREM várias células.
+           =================================================================== */
+        .demo-span {
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: 80px 80px; /* Duas linhas com 80px de altura cada. */
+        }
+
+        .demo-span .largo {
+            grid-column: 1 / 3;        /* Vai da linha-guia 1 até a 3 → ocupa 2 colunas. */
+            background-color: #e67e22; /* Cor diferente para destacar quem se estende. */
+        }
+
+        .demo-span .alto {
+            grid-row: 1 / 3;           /* Vai da linha-guia 1 até a 3 → ocupa 2 linhas (altura dupla). */
+            background-color: #9b59b6;
+        }
+
+        .demo-span .bloco {
+            grid-column: span 2;       /* "span 2" = ocupe 2 colunas a partir de onde eu cair. */
+            background-color: #16a085;
+        }
+
+        /* ===================================================================
+           DEMO 5 — GRID RESPONSIVO (auto-fit + minmax) — sem media queries!
+           =================================================================== */
+        .demo-responsive {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            /*
+              Este é o padrão MAIS útil do Grid para galerias/cards:
+                • minmax(150px, 1fr) → cada coluna tem NO MÍNIMO 150px e cresce
+                  até 1fr quando há espaço sobrando.
+                • auto-fit → o navegador CALCULA SOZINHO quantas colunas de 150px+
+                  cabem na largura atual e cria essa quantidade.
+              Resultado: estreite a janela e as colunas se REORGANIZAM sozinhas,
+              sem você escrever nenhuma media query. Pura mágica responsiva.
+            */
+        }
+
+        /* ===================================================================
+           DEMO 6 — grid-template-areas (layout por "mapa" nomeado)
+           A forma mais LEGÍVEL de montar o esqueleto de uma página inteira.
+           =================================================================== */
+        .demo-areas {
+            grid-template-columns: 200px 1fr;  /* Sidebar fixa + conteúdo elástico. */
+            grid-template-rows: auto 1fr auto; /* Header e footer do tamanho do conteúdo; meio elástico. */
+            min-height: 260px;
+            grid-template-areas:
+                "cabecalho cabecalho"  /* O header ocupa as DUAS colunas (mesmo nome repetido). */
+                "menu      conteudo"   /* Linha do meio: menu à esquerda, conteúdo à direita. */
+                "rodape    rodape";    /* O footer ocupa as duas colunas. */
+            /*
+              Desenhamos o layout como um "mapa" de texto. Depois, cada item
+              declara "grid-area: <nome>" e cai automaticamente no lugar certo.
+              É autoexplicativo: dá para "ler" o layout só olhando as aspas.
+            */
+        }
+
+        /* Cada item se conecta a uma região nomeada do mapa acima. */
+        .demo-areas .cabecalho { grid-area: cabecalho; background-color: #2c3e50; }
+        .demo-areas .menu      { grid-area: menu;      background-color: #16a085; }
+        .demo-areas .conteudo  { grid-area: conteudo;  background-color: #3498db; }
+        .demo-areas .rodape    { grid-area: rodape;    background-color: #7f8c8d; }
+    </style>
+</head>
+<body>
+
+    <h1>CSS Grid na prática</h1>
+    <p class="legenda">Cada caixa tracejada é um <strong>container grid</strong>; as caixas coloridas são os <strong>itens</strong> que caem nas células da grade. Diminua a janela para ver alguns efeitos mudarem.</p>
+
+    <!-- ===================== DEMO 1: grid-template-columns ===================== -->
+    <h2>1) grid-template-columns — define as colunas</h2>
+    <p class="legenda"><code>1fr 1fr 1fr</code> = três colunas iguais; os itens quebram de linha sozinhos.</p>
+    <div class="grid demo-columns">
+        <div class="item">1</div><div class="item">2</div><div class="item">3</div>
+        <div class="item">4</div><div class="item">5</div><div class="item">6</div>
+    </div>
+
+    <!-- ===================== DEMO 2: colunas de tamanhos diferentes ===================== -->
+    <h2>2) Colunas com tamanhos diferentes — px + fr</h2>
+    <p class="legenda"><code>200px 1fr 2fr</code>: a 1ª é fixa; a 3ª fica com o dobro da 2ª.</p>
+    <div class="grid demo-mixed">
+        <div class="item">200px</div>
+        <div class="item">1fr</div>
+        <div class="item">2fr</div>
+    </div>
+
+    <!-- ===================== DEMO 3: repeat() ===================== -->
+    <h2>3) repeat() — atalho para repetir colunas</h2>
+    <p class="legenda"><code>repeat(4, 1fr)</code> é igual a escrever <code>1fr 1fr 1fr 1fr</code>.</p>
+    <div class="grid demo-repeat">
+        <div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div>
+        <div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div>
+    </div>
+
+    <!-- ===================== DEMO 4: span / grid-column / grid-row ===================== -->
+    <h2>4) Posicionando itens — span, grid-column e grid-row</h2>
+    <p class="legenda">O laranja ocupa 2 colunas; o roxo ocupa 2 linhas; o verde usa <code>span 2</code>.</p>
+    <div class="grid demo-span">
+        <div class="item largo">largo (2 colunas)</div>
+        <div class="item alto">alto (2 linhas)</div>
+        <div class="item">3</div>
+        <div class="item bloco">span 2</div>
+        <div class="item">5</div>
+    </div>
+
+    <!-- ===================== DEMO 5: grid responsivo (auto-fit + minmax) ===================== -->
+    <h2>5) Grid responsivo — auto-fit + minmax (sem media queries!)</h2>
+    <p class="legenda">Estreite a janela: o número de colunas se ajusta sozinho. Cada card tem no mínimo 150px.</p>
+    <div class="grid demo-responsive">
+        <div class="item">card 1</div><div class="item">card 2</div><div class="item">card 3</div>
+        <div class="item">card 4</div><div class="item">card 5</div><div class="item">card 6</div>
+        <div class="item">card 7</div><div class="item">card 8</div>
+    </div>
+
+    <!-- ===================== DEMO 6: grid-template-areas ===================== -->
+    <h2>6) grid-template-areas — o esqueleto da página por "mapa" nomeado</h2>
+    <p class="legenda">Header e footer ocupam a largura toda; no meio, menu à esquerda e conteúdo à direita.</p>
+    <div class="grid demo-areas">
+        <div class="item cabecalho">cabeçalho</div>
+        <div class="item menu">menu</div>
+        <div class="item conteudo">conteúdo</div>
+        <div class="item rodape">rodapé</div>
+    </div>
+
+</body>
+</html>

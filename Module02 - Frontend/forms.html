@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  FORMULÁRIOS HTML (<form>) — Coletando Dados do Usuário
+  ============================================================================
+
+  Formulário é como a página CONVERSA com o usuário: login, cadastro, busca,
+  checkout, contato — tudo passa por um <form>. Fazer um formulário BEM FEITO
+  é menos sobre visual e mais sobre SEMÂNTICA e ACESSIBILIDADE.
+
+  A anatomia de um formulário correto:
+
+       <form>                 -> a "moldura" que agrupa e ENVIA os campos.
+         <label>              -> o RÓTULO de um campo (clicável, lê em voz alta).
+         <input>              -> a caixa onde o usuário digita/seleciona.
+         <fieldset> + <legend> -> agrupam campos relacionados com um título.
+         <button>             -> dispara o envio (ou outra ação).
+
+  Grave estes conceitos — eles separam o amador do profissional:
+
+  1) TODO input precisa de um <label> conectado. Há duas formas:
+       • <label for="email"> ... <input id="email">  (o for casa com o id)
+       • <label> Texto <input> </label>              (input "abraçado" pelo label)
+     Sem label, leitores de tela ficam perdidos e a usabilidade despenca.
+
+  2) Os atributos que mais importam num <input>:
+       • type     -> muda o comportamento e o teclado no celular (email, tel, number...).
+       • name     -> a "etiqueta" que vai junto do valor quando o form é enviado.
+       • id       -> conecta o input ao seu <label> (via for).
+       • required -> campo obrigatório (validação nativa, sem JavaScript).
+       • placeholder -> dica DENTRO do campo (NÃO substitui o label!).
+
+  3) O navegador VALIDA sozinho (HTML5): required, type="email", min, max,
+     pattern, minlength... — antes de escrever uma linha de JavaScript.
+
+  Mexa nos atributos e tente enviar o formulário para ver a validação nativa!
+  ============================================================================
+-->
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"> <!-- Codificação UTF-8 (acentos corretos). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsividade em celulares. -->
+    <title>Formulários HTML - Aula Comentada</title>
+    <style>
+        /* ===================================================================
+           ESTILOS GERAIS (apenas para a página ficar legível)
+           =================================================================== */
+        * {
+            box-sizing: border-box; /* Largura/altura já incluem padding e borda (vide a aula de Box Model). */
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        h1 { font-size: 1.6rem; }
+
+        /* Título de cada demonstração. */
+        h2 {
+            font-size: 1.1rem;
+            margin: 32px 0 4px;
+            color: #2c3e50;
+        }
+
+        /* Pequena legenda explicando o que observar em cada demo. */
+        .legenda {
+            margin: 0 0 8px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* "Cartão" que envolve cada formulário, só para separar visualmente. */
+        form {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 480px; /* Formulário largo demais cansa a leitura; limitamos a largura. */
+        }
+
+        /*
+          .campo agrupa um <label> + seu <input>.
+          Usamos Flexbox em coluna para o label ficar ACIMA do campo — o padrão
+          mais legível e mais fácil de usar no celular.
+        */
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;          /* Respiro entre o rótulo e a caixa. */
+            margin-bottom: 16px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /*
+          Estilo base de TODOS os controles de texto.
+          width:100% faz o campo acompanhar a largura do formulário.
+        */
+        input, select, textarea {
+            padding: 10px;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit; /* textarea, por padrão, não herda a fonte do body — forçamos aqui. */
+            width: 100%;
+        }
+
+        textarea {
+            resize: vertical; /* Permite ao usuário esticar só na VERTICAL (esticar na horizontal quebra o layout). */
+            min-height: 80px;
+        }
+
+        /*
+          :focus — quando o campo está SELECIONADO (cursor dentro dele).
+          Destacar o foco é essencial para quem navega pelo teclado (Tab).
+        */
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        /*
+          :invalid + :required — o navegador marca SOZINHO os campos
+          obrigatórios preenchidos de forma inválida (após interação).
+          Aqui só damos um retorno visual sutil de borda vermelha.
+        */
+        input:required:invalid {
+            border-color: #e74c3c;
+        }
+
+        /* <fieldset> agrupa campos relacionados (ex.: as opções de um rádio). */
+        fieldset {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        legend {
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 0 6px;
+        }
+
+        /* Para checkbox/radio o label vai AO LADO, então usamos linha (row). */
+        .opcao {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .opcao label { font-weight: normal; } /* Rótulo de opção não precisa de negrito. */
+        .opcao input { width: auto; }         /* Checkbox/radio não devem ocupar 100% da largura. */
+
+        /* Botão de envio. */
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover { background-color: #2c80b4; } /* Feedback ao passar o mouse. */
+
+        small { color: #888; font-weight: normal; } /* Texto de ajuda abaixo de um campo. */
+    </style>
+</head>
+<body>
+
+    <h1>Formulários HTML na prática</h1>
+    <p class="legenda">Todo campo tem um <strong>&lt;label&gt;</strong> conectado. Tente enviar com campos vazios para ver a <strong>validação nativa</strong> do navegador.</p>
+
+    <!--
+      O <form> é o container que ENVIA os dados.
+        • action -> URL que receberá os dados (aqui é só ilustrativo).
+        • method -> "get" (dados na URL, p/ buscas) ou "post" (no corpo, p/ cadastros).
+      Mantemos action="#" só para o exemplo não sair da página.
+    -->
+    <form action="#" method="post">
+
+        <!-- ===================== DEMO 1: campos de texto + label ===================== -->
+        <h2>1) Texto, e-mail e senha — type muda tudo</h2>
+        <p class="legenda">No celular, cada <code>type</code> abre um teclado diferente (arroba no e-mail, números no telefone).</p>
+
+        <div class="campo">
+            <!-- for="nome" CASA com id="nome": clicar no label foca o input. -->
+            <label for="nome">Nome completo</label>
+            <input
+                type="text"
+                id="nome"
+                name="nome"
+                placeholder="Ex.: Maria Silva"
+                required
+            >
+            <!-- required: o navegador NÃO deixa enviar se estiver vazio. -->
+        </div>
+
+        <div class="campo">
+            <label for="email">E-mail</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="voce@exemplo.com"
+                required
+            >
+            <!-- type="email": o navegador valida o formato (precisa ter @, etc.) sozinho. -->
+            <small>Validado automaticamente: precisa conter "@".</small>
+        </div>
+
+        <div class="campo">
+            <label for="senha">Senha</label>
+            <input
+                type="password"
+                id="senha"
+                name="senha"
+                minlength="8"
+                required
+            >
+            <!-- type="password" oculta os caracteres; minlength exige no mínimo 8. -->
+            <small>Mínimo de 8 caracteres (atributo minlength).</small>
+        </div>
+
+        <!-- ===================== DEMO 2: number, date e range ===================== -->
+        <h2>2) Tipos especiais — number, date e range</h2>
+        <p class="legenda">Cada um traz um controle pronto: setinhas, calendário e um "slider".</p>
+
+        <div class="campo">
+            <label for="idade">Idade</label>
+            <input
+                type="number"
+                id="idade"
+                name="idade"
+                min="0"
+                max="120"
+            >
+            <!-- type="number": só aceita números; min/max limitam o intervalo válido. -->
+        </div>
+
+        <div class="campo">
+            <label for="nascimento">Data de nascimento</label>
+            <input type="date" id="nascimento" name="nascimento">
+            <!-- type="date": o navegador exibe um seletor de calendário nativo. -->
+        </div>
+
+        <div class="campo">
+            <label for="satisfacao">Nível de satisfação</label>
+            <input type="range" id="satisfacao" name="satisfacao" min="0" max="10" value="5">
+            <!-- type="range": vira um "slider" deslizante entre min e max. -->
+        </div>
+
+        <!-- ===================== DEMO 3: select (lista suspensa) ===================== -->
+        <h2>3) select — escolher UM item de uma lista</h2>
+        <p class="legenda">Ideal quando há muitas opções (estados, países). Poucas opções? Prefira radio.</p>
+
+        <div class="campo">
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado" required>
+                <!-- A 1ª <option> desabilitada funciona como "placeholder" da lista. -->
+                <option value="" disabled selected>Selecione...</option>
+                <option value="SP">São Paulo</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="RS">Rio Grande do Sul</option>
+            </select>
+            <!-- O atributo value de cada option é o que REALMENTE é enviado (ex.: "SP"). -->
+        </div>
+
+        <!-- ===================== DEMO 4: radio e checkbox (fieldset) ===================== -->
+        <h2>4) radio e checkbox — agrupados em fieldset</h2>
+        <p class="legenda"><strong>radio</strong> = escolha ÚNICA (mesmo name). <strong>checkbox</strong> = várias ao mesmo tempo.</p>
+
+        <!--
+          RADIO: o segredo é que todos compartilham o MESMO name ("plano").
+          É isso que faz o navegador entender que são EXCLUDENTES (só um marcado).
+        -->
+        <fieldset>
+            <legend>Plano (escolha um)</legend>
+
+            <div class="opcao">
+                <input type="radio" id="plano-free" name="plano" value="free" checked>
+                <label for="plano-free">Gratuito</label>
+            </div>
+            <div class="opcao">
+                <input type="radio" id="plano-pro" name="plano" value="pro">
+                <label for="plano-pro">Profissional</label>
+            </div>
+            <div class="opcao">
+                <input type="radio" id="plano-team" name="plano" value="team">
+                <label for="plano-team">Equipe</label>
+            </div>
+        </fieldset>
+
+        <!--
+          CHECKBOX: independentes entre si — o usuário pode marcar várias.
+          Cada um costuma ter seu próprio name (ou um name de array no back-end).
+        -->
+        <fieldset>
+            <legend>Interesses (marque quantos quiser)</legend>
+
+            <div class="opcao">
+                <input type="checkbox" id="int-front" name="interesses" value="frontend">
+                <label for="int-front">Front-end</label>
+            </div>
+            <div class="opcao">
+                <input type="checkbox" id="int-back" name="interesses" value="backend">
+                <label for="int-back">Back-end</label>
+            </div>
+            <div class="opcao">
+                <input type="checkbox" id="int-mobile" name="interesses" value="mobile">
+                <label for="int-mobile">Mobile</label>
+            </div>
+        </fieldset>
+
+        <!-- ===================== DEMO 5: textarea ===================== -->
+        <h2>5) textarea — texto longo de várias linhas</h2>
+        <p class="legenda">Para mensagens, comentários, descrições. O <code>&lt;input&gt;</code> é só de uma linha.</p>
+
+        <div class="campo">
+            <label for="mensagem">Mensagem</label>
+            <textarea
+                id="mensagem"
+                name="mensagem"
+                placeholder="Escreva aqui..."
+                maxlength="300"
+            ></textarea>
+            <!-- maxlength limita o total de caracteres. textarea NÃO é auto-fechável: precisa de </textarea>. -->
+            <small>Até 300 caracteres.</small>
+        </div>
+
+        <!-- ===================== DEMO 6: botões de envio ===================== -->
+        <h2>6) Enviar o formulário</h2>
+        <p class="legenda">type="submit" dispara a validação e o envio; type="reset" limpa tudo.</p>
+
+        <div class="campo">
+            <!-- type="submit" é o padrão de <button> dentro de um form: envia os dados. -->
+            <button type="submit">Cadastrar</button>
+        </div>
+
+    </form>
+
+</body>
+</html>
