@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras</title>
+</head>
+<body>
+    <h1>Carrinho de Compras</h1>
+
+    <button onclick="adicionarItem('Camiseta', 49.90)">Adicionar Camiseta (R$ 49,90)</button>
+    <button onclick="adicionarItem('Calça', 89.90)">Adicionar Calça (R$ 89,90)</button>
+    <button onclick="limparCarrinho()">Limpar o Carrinho</button>
+
+    <button onclick="atualizarTela()">Atualizar a Tela</button>
+
+    <p>Itens no carrinho: <span id="qtd">0</span></p>
+    <p>Total: R$<span id="total">0.00</span></p>
+
+    <script src="./carrinho.js"></script>
+    <script>
+        function atualizarTela() {
+            document.getElementById("qtd").textContent = contarItens()
+            document.getElementById("total").textContent = calcularTotal().toFixed(2)
+        }
+    </script>
+</body>
+</html>
