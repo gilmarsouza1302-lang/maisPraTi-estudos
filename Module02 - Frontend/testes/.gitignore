@@ -1,0 +1,10 @@
+# Dependências instaladas pelo npm (recriadas com `npm install`).
+# Nunca versionamos node_modules: é pesado e específico da máquina.
+node_modules/
+
+# Logs e caches
+npm-debug.log*
+.npm/
+
+# Cobertura de testes gerada pelo Jest (npx jest --coverage)
+coverage/

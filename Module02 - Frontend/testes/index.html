@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  A OUTRA PONTA: O MESMO carrinho.js RODANDO NO NAVEGADOR
+  ============================================================================
+
+  Enquanto `carrinho.test.js` prova que a lógica funciona AUTOMATICAMENTE (no
+  Node/Jest, sem tela), este HTML mostra a MESMA lógica sendo usada de verdade
+  por um usuário, com botões e a página atualizando.
+
+  A grande sacada: é EXATAMENTE o mesmo arquivo `carrinho.js` nos dois mundos.
+    • No Jest  → importado com require(), testado sem interface.
+    • Aqui     → carregado com <script src="./carrinho.js"> e chamado pelos
+                 onclick dos botões.
+  Isso só é possível por causa da "exportação condicional" (o if no fim do
+  carrinho.js), que detecta em qual ambiente o código está rodando.
+
+  Repare que ESTE arquivo NÃO tem testes — testar a lógica é papel do Jest.
+  Aqui só exercitamos a experiência visual.
+  ============================================================================
+-->
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"> <!-- Codificação UTF-8: acentos e "R$" corretos. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsividade. -->
+    <title>Carrinho de Compras</title>
+</head>
+<body>
+    <h1>Carrinho de Compras</h1>
+
+    <!--
+      onclick chama diretamente as funções que o carrinho.js deixou disponíveis
+      no escopo global do navegador. Cada clique altera o ESTADO (a lista itens).
+    -->
+    <button onclick="adicionarItem('Camiseta', 49.90)">Adicionar Camiseta (R$ 49,90)</button>
+    <button onclick="adicionarItem('Calça', 89.90)">Adicionar Calça (R$ 89,90)</button>
+    <button onclick="limparCarrinho()">Limpar o Carrinho</button>
+
+    <!--
+      Detalhe de aprendizado: adicionarItem/limparCarrinho mudam o ESTADO, mas
+      NÃO redesenham a tela sozinhos. Por isso existe este botão "Atualizar",
+      que lê o estado atual e joga na tela. (Num framework como o React, esse
+      passo de "sincronizar estado → tela" seria automático.)
+    -->
+    <button onclick="atualizarTela()">Atualizar a Tela</button>
+
+    <!-- Os <span> com id são os "buracos" que o JS preenche com os números. -->
+    <p>Itens no carrinho: <span id="qtd">0</span></p>
+    <p>Total: R$<span id="total">0.00</span></p>
+
+    <!-- 1º carrega a LÓGICA (as funções do carrinho)... -->
+    <script src="./carrinho.js"></script>
+
+    <!-- ...2º define como MOSTRAR essa lógica na tela. -->
+    <script>
+        // Lê o estado atual (contarItens/calcularTotal) e escreve nos <span>.
+        function atualizarTela() {
+            // .textContent troca o texto de dentro do elemento.
+            document.getElementById("qtd").textContent = contarItens()
+            // .toFixed(2) formata o número com 2 casas decimais (ex.: "139.80").
+            document.getElementById("total").textContent = calcularTotal().toFixed(2)
+        }
+    </script>
+</body>
+</html>
