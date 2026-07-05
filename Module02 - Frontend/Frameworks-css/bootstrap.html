@@ -1,0 +1,211 @@
+<!doctype html>
+<!--
+  ============================================================================
+  BOOTSTRAP — o framework de "componentes prontos"
+  ============================================================================
+
+  O QUE É?
+  Bootstrap é o framework CSS mais popular do mundo (criado no Twitter). A ideia
+  central dele é: em vez de você escrever o CSS de um botão, de um card ou de uma
+  navbar do zero, ele já ENTREGA esses componentes prontos e bonitos. Você só
+  aplica as CLASSES certas no HTML e o visual aparece.
+
+  A FILOSOFIA (importante entender a diferença para o Tailwind):
+  Bootstrap trabalha com "COMPONENTES" — classes que representam uma COISA
+  inteira e já estilizada:
+        <button class="btn btn-primary">   → um botão azul completo, pronto.
+        <div class="card">                 → um cartão com sombra e cantos.
+        <div class="alert alert-danger">   → uma caixa de aviso vermelha.
+  Ou seja, poucas classes, alto nível, visual "padrão Bootstrap".
+  (No Tailwind é o contrário: muitas classes pequenas, cada uma um detalhe.
+   Veja o arquivo `tailwind.html` e o `comparativo.md` desta pasta.)
+
+  COMO INSTALAR? (aqui usamos a forma mais simples: CDN)
+  Basta 2 links vindos de um CDN (servidor público que hospeda a biblioteca):
+     • Um <link> para o CSS (as classes visuais)  → vai no <head>.
+     • Um <script> para o JS (componentes interativos: dropdown, navbar mobile,
+       carrossel, modal…) → vai no fim do <body>.
+  O pacote "bootstrap.bundle" já inclui o Popper (usado para posicionar
+  dropdowns/tooltips), então NÃO precisamos importar o Popper separadamente.
+
+  DOCUMENTAÇÃO OFICIAL:
+     • Site:        https://getbootstrap.com/
+     • Introdução:  https://getbootstrap.com/docs/5.3/getting-started/introduction/
+     • Componentes: https://getbootstrap.com/docs/5.3/components/
+     • Layout/Grid: https://getbootstrap.com/docs/5.3/layout/grid/
+  ============================================================================
+-->
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estudo de Bootstrap</title>
+
+    <!--
+      CSS do Bootstrap. É este arquivo que dá significado visual a classes como
+      "btn", "card", "navbar". Sem ele, as classes seriam apenas texto no HTML.
+    -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="p-4">
+    <!--
+      ====================================================================
+      1) NAVBAR — barra de navegação responsiva (componente + JS)
+      ====================================================================
+      A navbar é o exemplo clássico de componente que precisa do JS do Bootstrap:
+      no celular, o menu "colapsa" e vira o botão de "três risquinhos"
+      (navbar-toggler); ao clicar, o JS expande a lista. Os atributos
+      `data-bs-toggle` e `data-bs-target` são o que ligam o botão ao menu.
+    -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary border rounded mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+
+        <!-- Botão "hambúrguer" que aparece só em telas pequenas. -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- O menu que colapsa. O id casa com o data-bs-target acima. -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+
+            <!-- Dropdown: outro componente que depende do JS do Bootstrap. -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Dropdown
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+            </li>
+          </ul>
+
+          <!-- Formulário de busca. "d-flex" = display:flex (utilitário). -->
+          <form class="d-flex" role="search">
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <!--
+      ====================================================================
+      2) BOTÕES — a "gramática" das classes do Bootstrap
+      ====================================================================
+      Repare no padrão: uma classe BASE ("btn") + uma classe de VARIAÇÃO
+      ("btn-primary", "btn-outline-success"…). As cores seguem nomes semânticos
+      fixos do Bootstrap: primary (azul), secondary (cinza), success (verde),
+      danger (vermelho), warning (amarelo), info (ciano).
+      Docs: https://getbootstrap.com/docs/5.3/components/buttons/
+    -->
+    <h5>Botões</h5>
+    <button class="btn btn-primary">Primário</button>
+    <button class="btn btn-success">Sucesso</button>
+    <button class="btn btn-danger">Perigo</button>
+    <button class="btn btn-outline-secondary">Contorno</button>
+
+    <!--
+      ====================================================================
+      3) ALERT — caixa de aviso pronta
+      ====================================================================
+      Um exemplo perfeito da filosofia "componente": "alert alert-danger" já
+      entrega fundo, cor de texto, borda e espaçamento coerentes.
+      Docs: https://getbootstrap.com/docs/5.3/components/alerts/
+    -->
+    <h5 class="mt-4">Alert</h5>
+    <div class="alert alert-danger">Algo deu errado!</div>
+
+    <!--
+      ====================================================================
+      4) FORM CONTROL — input estilizado
+      ====================================================================
+      "form-control" padroniza a aparência de inputs (borda, padding, foco).
+      Docs: https://getbootstrap.com/docs/5.3/forms/form-control/
+    -->
+    <h5 class="mt-4">Input</h5>
+    <input type="text" class="form-control" placeholder="Digite aqui" />
+
+    <!--
+      ====================================================================
+      5) CARD — cartão de conteúdo
+      ====================================================================
+      "card" cria o contêiner; "card-title"/"card-text" organizam o interior.
+      "p-3" (padding) e "bg-success" (fundo verde) são classes UTILITÁRIAS —
+      pequenos ajustes que o Bootstrap também oferece, no estilo do Tailwind.
+      Docs: https://getbootstrap.com/docs/5.3/components/card/
+    -->
+    <h5 class="mt-4">Card</h5>
+    <div class="card p-3 bg-success text-white">
+      <h5 class="card-title">Título</h5>
+      <p class="card-text">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem dolores
+        magni iste, voluptatem cumque distinctio ea quas corrupti?
+      </p>
+    </div>
+
+    <!--
+      ====================================================================
+      6) GRID — o sistema de colunas (12 colunas)
+      ====================================================================
+      O layout do Bootstrap se baseia numa grade de 12 colunas dentro de ".row".
+      "col-6" = ocupa 6 das 12 colunas = metade da largura. Dois "col-6" lado a
+      lado preenchem a linha. Existem variações responsivas (col-md-6, col-lg-4…)
+      que mudam conforme o tamanho da tela.
+      Docs: https://getbootstrap.com/docs/5.3/layout/grid/
+    -->
+    <h5 class="mt-4">Grid (12 colunas)</h5>
+    <div class="row">
+      <div class="col-6 bg-success text-white p-2">Coluna 1 (col-6)</div>
+      <div class="col-6 bg-danger text-white p-2">Coluna 2 (col-6)</div>
+    </div>
+
+    <!--
+      ====================================================================
+      SCRIPT JS DO BOOTSTRAP (obrigatório p/ navbar mobile, dropdown, etc.)
+      ====================================================================
+      Vai no FIM do body para que o HTML já exista quando o JS rodar.
+      Usamos o pacote ".bundle", que JÁ INCLUI o Popper — por isso NÃO
+      importamos Popper nem o bootstrap.min.js separadamente (seria redundante).
+    -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

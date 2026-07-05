@@ -1,0 +1,162 @@
+<!doctype html>
+<!--
+  ============================================================================
+  TAILWIND CSS — o framework "utility-first" (utilitários em primeiro lugar)
+  ============================================================================
+
+  O QUE É?
+  Tailwind é um framework CSS que segue uma filosofia OPOSTA à do Bootstrap. Em
+  vez de te dar componentes prontos ("um botão", "um card"), ele te dá centenas
+  de classes UTILITÁRIAS minúsculas, cada uma responsável por UM detalhe:
+        p-4          → padding
+        bg-blue-500  → cor de fundo azul (tom 500)
+        rounded      → cantos arredondados
+        text-white   → texto branco
+  Você COMPÕE o visual juntando essas pecinhas direto no HTML. Não existe um
+  "botão do Tailwind" — você monta o seu, classe por classe.
+
+  A FILOSOFIA ("utility-first"):
+        Bootstrap:  1 classe grande e pronta      → <button class="btn btn-primary">
+        Tailwind:   várias classes pequenas       → <button class="bg-blue-500 text-white px-4 py-2 rounded">
+  Vantagem: liberdade total e visual único (não fica "cara de Bootstrap").
+  Custo:    o HTML fica com MUITAS classes e você precisa decorar os utilitários.
+  (Veja o `comparativo.md` desta pasta para a comparação completa.)
+
+  ENTENDENDO A ESCALA DE NÚMEROS:
+     • Espaçamento (p-4, m-2, gap-4): o número é um "passo" na escala. 4 = 1rem
+       (16px), 2 = 0.5rem (8px)… ou seja, `p-4` = 16px de padding por todos os lados.
+     • Cores (bg-blue-500, text-red-700): o número é a INTENSIDADE, de 50 (bem
+       claro) a 950 (bem escuro). 500 costuma ser o tom "médio/base".
+
+  ⚠️ SOBRE ESTE ARQUIVO (importante para estudo):
+  Aqui usamos o "Play CDN" (o <script> no fim). Ele é ÓTIMO para APRENDER e
+  testar rapidinho, mas NÃO deve ser usado em produção (é grande e compila no
+  navegador). Em projetos reais, o Tailwind é instalado via npm e faz um passo
+  de build que "varre" seu HTML e gera só o CSS das classes que você realmente
+  usou (arquivo final minúsculo). Docs de instalação: link abaixo.
+
+  DOCUMENTAÇÃO OFICIAL:
+     • Site:              https://tailwindcss.com/
+     • Instalação (real): https://tailwindcss.com/docs/installation
+     • Utilitários (busca): https://tailwindcss.com/docs
+     • Cores:             https://tailwindcss.com/docs/customizing-colors
+     • Espaçamento:       https://tailwindcss.com/docs/padding
+  ============================================================================
+-->
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estudo de Tailwind CSS</title>
+
+    <!--
+      Play CDN do Tailwind — só para estudo/protótipo (NÃO usar em produção).
+      Ele lê as classes do HTML e gera o CSS na hora, dentro do navegador.
+    -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="p-6 space-y-6 bg-gray-50 text-gray-800">
+    <!--
+      "space-y-6" no body adiciona espaço vertical entre os filhos diretos.
+      "bg-gray-50" fundo bem clarinho; "text-gray-800" texto quase preto.
+      Já dá para sentir o "utility-first": o layout inteiro descrito em classes.
+    -->
+
+    <!--
+      ====================================================================
+      1) BOTÕES — montados peça por peça
+      ====================================================================
+      Repare que NÃO existe classe "botão". Nós construímos:
+        bg-blue-500  → fundo azul       px-4  → padding horizontal (eixo x)
+        text-white   → texto branco     py-2  → padding vertical (eixo y)
+        rounded      → cantos arredondados
+        hover:bg-blue-600 → NO HOVER, escurece o azul (prefixo de ESTADO!)
+      O prefixo "hover:" é um superpoder do Tailwind: aplica a classe só naquele
+      estado. Existem vários: focus:, active:, disabled:, e os responsivos abaixo.
+    -->
+    <h5 class="font-semibold">Botões</h5>
+    <div class="space-x-2">
+      <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Primário
+      </button>
+      <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+        Sucesso
+      </button>
+      <button class="border border-gray-400 text-gray-700 px-4 py-2 rounded hover:bg-gray-100">
+        Contorno
+      </button>
+    </div>
+
+    <!--
+      ====================================================================
+      2) "ALERT" — no Tailwind, você desenha o seu
+      ====================================================================
+      O que no Bootstrap era "alert alert-danger", aqui é composto: fundo
+      vermelho claro (bg-red-100) + texto vermelho escuro (text-red-700) +
+      espaçamentos + cantos. Total controle sobre a aparência.
+    -->
+    <h5 class="font-semibold">Aviso (alert feito à mão)</h5>
+    <div class="bg-red-100 text-red-700 px-4 py-3 rounded">Algo deu errado!</div>
+
+    <!--
+      ====================================================================
+      3) INPUT — borda, arredondamento e padding manuais
+      ====================================================================
+    -->
+    <h5 class="font-semibold">Input</h5>
+    <input
+      type="text"
+      placeholder="Digite aqui"
+      class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+
+    <!--
+      ====================================================================
+      4) CARD — um cartão composto de utilitários
+      ====================================================================
+        bg-white   → fundo branco       shadow → sombra
+        rounded-lg → cantos bem redondos p-4    → padding interno
+        font-semibold / text-sm / text-gray-500 → tipografia do conteúdo
+    -->
+    <h5 class="font-semibold">Card</h5>
+    <div class="bg-white rounded-lg shadow p-4 max-w-md">
+      <h5 class="font-semibold mb-1">Título</h5>
+      <p class="text-gray-500 text-sm">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem dolores
+        magni iste, voluptatem cumque distinctio ea quas corrupti?
+      </p>
+    </div>
+
+    <!--
+      ====================================================================
+      5) GRID — layout com CSS Grid via utilitários
+      ====================================================================
+      Enquanto o Bootstrap usa um grid FIXO de 12 colunas, o Tailwind expõe o
+      CSS Grid "cru":
+        grid            → ativa display:grid
+        grid-cols-2     → 2 colunas de tamanhos iguais
+        gap-4           → espaço entre as células
+      Para responsividade, prefixe com o breakpoint: "md:grid-cols-3" = 3 colunas
+      só em telas médias ou maiores. (mobile-first: sem prefixo = celular.)
+    -->
+    <h5 class="font-semibold">Grid</h5>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-green-500 text-white p-4 rounded">Coluna 1</div>
+      <div class="bg-red-500 text-white p-4 rounded">Coluna 2</div>
+    </div>
+
+    <!--
+      ====================================================================
+      6) RESPONSIVIDADE "mobile-first" — o coração do Tailwind
+      ====================================================================
+      Sem prefixo = vale para TODOS os tamanhos (começando no celular).
+      Com prefixo (sm:, md:, lg:, xl:) = vale DAQUELE tamanho PRA CIMA.
+      Abaixo: texto pequeno no celular, maior no tablet, ainda maior no desktop.
+      Docs: https://tailwindcss.com/docs/responsive-design
+    -->
+    <h5 class="font-semibold">Responsividade</h5>
+    <p class="text-sm md:text-lg lg:text-2xl">
+      Redimensione a janela: meu tamanho muda em cada breakpoint.
+    </p>
+  </body>
+</html>
