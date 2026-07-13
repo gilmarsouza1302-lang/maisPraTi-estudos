@@ -1,0 +1,25 @@
+.card {
+    background-color: #fff;
+    border: 1px solid var(--tinta);
+    padding: 18px;
+}
+
+.card__categoria {
+    font-family: var(--fonte-ui);
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--urgente);
+    letter-spacing: 1px;
+}
+
+.card__titulo {
+    font-size: 19px;
+    line-height: 1.5;
+    margin: 8px 0 6px;
+}
+
+.card__resumo {
+    font-size: 14px;
+    color: var(--cinza-legenda);
+}
