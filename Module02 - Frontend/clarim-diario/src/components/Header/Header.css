@@ -1,0 +1,53 @@
+.cabecalho {
+    padding: 12px 16px 0;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.cabecalho__faixa {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--fonte-ui);
+    font-size: 12px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--tinta);
+    padding-bottom: 6px;
+}
+
+.cabecalho__titulo {
+    text-align: center;
+    font-style: italic;
+    font-size: clamp(40px, 8vw, 84px);
+    letter-spacing: 2px;
+    margin: 10px 0 2px;
+}
+
+.cabecalho__lema {
+    text-align: center;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--cinza-legenda);
+    margin-bottom: 10px;
+}
+
+.cabecalho__menu {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    border-top: 1px solid var(--tinta);
+    padding: 10px 0;
+    border-bottom: 4px double var(--tinta);
+}
+
+.cabecalho__menu a {
+    font-family: var(--fonte-ui);
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--tinta);
+    text-decoration: none;
+}
+
+.cabecalho__menu a:hover {
+    color: var(--urgente);
+}
