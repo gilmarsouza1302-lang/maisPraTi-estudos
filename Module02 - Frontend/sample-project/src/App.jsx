@@ -1,6 +1,6 @@
 import {useState} from "react";
 
- function saudacao( {nome}){
+ function Saudacao( {nome}){
   return <h2>"Olá, " { nome } " Seja bem-vindo (a)!</h2>;
  }
  export default function App() {
@@ -9,7 +9,7 @@ import {useState} from "react";
 
   return (
          <div>
-          <saudacao nome="João" />
+          <Saudacao nome="João" />
           <p>
              {contador}
           </p>
