@@ -1,0 +1,10 @@
+.manchete { margin: 24px 0; }
+.manchete .card { border-width: 3px; padding: 32px; }
+.manchete .card__titulo { font-size: 40px }
+
+.grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}

@@ -1,6 +1,6 @@
 import './Header.css'
 
-function Header() {
+function Header({ tema, aoAlternarTema }) {
     const hoje = new Date().toLocaleDateString('pt-BR', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     })
@@ -11,6 +11,9 @@ function Header() {
                 <span>Edição de Nova York</span>
                 <span>{hoje}</span>
                 <span>U$ 1,50</span>
+                <button className="cabecalho__tema" onClick={aoAlternarTema}>
+                    {tema === 'light' ? 'Escuro' : 'Claro'}
+                </button>
             </div>
 
             <h1 className="cabecalho__titulo">O CLARIM DIÁRIO</h1>

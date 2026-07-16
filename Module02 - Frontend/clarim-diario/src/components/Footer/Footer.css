@@ -1,0 +1,45 @@
+.rodape {
+    max-width: 1100px;
+    margin: 40px auto 0;
+    padding: 16px;
+    text-align: center;
+    border-top: 4px double var(--tinta);
+}
+
+.rodape__menu {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--tinta);
+    margin-bottom: 10px;
+}
+
+.rodape__menu a {
+    font-family: var(--fonte-ui);
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--tinta);
+    text-decoration: none;
+    white-space: nowrap;   /* Impede quebra de linha nos links do menu*/
+}
+
+
+.rodape__menu a:hover {
+    color: var(--urgente);
+}
+
+.rodape__copyright {
+    font-family: var(--fonte-ui);
+    font-size: 12px;
+    color: var(--tinta);
+}
+
+.rodape__lema {
+    font-style: italic;
+    font-size: 12px;
+    color: var(--cinza-legenda);
+    margin-top: 4px;
+}

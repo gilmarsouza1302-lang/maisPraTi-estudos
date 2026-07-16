@@ -51,3 +51,14 @@
 .cabecalho__menu a:hover {
     color: var(--urgente);
 }
+
+.cabecalho__tema {
+    font-family: var(--fonte-ui);
+    font-size: 12px;
+    background: none;
+    border: 1px solid var(--tinta);
+    color: var(--tinta);
+    padding: 3px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
