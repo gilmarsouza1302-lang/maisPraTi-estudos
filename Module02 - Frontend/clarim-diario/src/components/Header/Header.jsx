@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './Header.css'
 
 function Header({ tema, aoAlternarTema }) {
@@ -16,15 +17,17 @@ function Header({ tema, aoAlternarTema }) {
                 </button>
             </div>
 
-            <h1 className="cabecalho__titulo">O CLARIM DIÁRIO</h1>
+            <Link to="/" className="cabecalho__link-titulo">
+                <h1 className="cabecalho__titulo">O CLARIM DIÁRIO</h1>
+            </Link>
             <p className="cabecalho__lema">A verdade doa a quem doer - Inclusive a certos aracnídeos</p>
 
             <nav className="cabecalho__menu">
-                <a href="">Cidade</a>
-                <a href="">Ameaças Urbanas</a>
-                <a href="">Opinião do Editor</a>
-                <a href="">Esportes</a>
-                <a href="">Classificados</a>
+                <Link to="/">Cidade</Link>
+                <Link to="/">Ameaças Urbanas</Link>
+                <Link to="/">Opinião do Editor</Link>
+                <Link to="/">Esportes</Link>
+                <Link to="/cadastro">Assine</Link>
             </nav>
         </header>
     )

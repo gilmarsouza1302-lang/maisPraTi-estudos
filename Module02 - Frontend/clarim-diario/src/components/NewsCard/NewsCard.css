@@ -23,3 +23,8 @@
     font-size: 14px;
     color: var(--cinza-legenda);
 }
+
+.card__link {
+    text-decoration: none;
+    color: inherit;
+}

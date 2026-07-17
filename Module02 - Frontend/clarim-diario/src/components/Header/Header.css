@@ -62,3 +62,8 @@
     border-radius: 8px;
     cursor: pointer;
 }
+
+.cabecalho__link-titulo {
+    text-decoration: none;
+    color: inherit;
+}
