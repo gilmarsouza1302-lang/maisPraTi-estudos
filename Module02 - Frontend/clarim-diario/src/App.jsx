@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header/Header'
-import Footer from './components/Footer/Footer'
 import Home from './pages/Home/Home'
-import Cadastro from './pages/Cadastro/Cadastro'
 import Materia from './pages/Materia/Materia'
+import Cadastro from './pages/Cadastro/Cadastro'
+import Login from './pages/Login/Login'
+import RotaProtegida from './components/RotaProtegida'
+import Painel from './pages/Painel/Painel'
 import './App.css'
 
 function App() {
   const [ tema, setTema ] = useState(() => {
-    const salvo = localStorage.getItem('tema')
-    if (salvo) return salvo
+    const salvo = localStorage.getItem('tema') || 'light'
+    if(salvo) return salvo
 
-    const preferenciaEscuro = window.matchMedia('(prefers-color-scheme: dark)').matches
-    if (preferenciaEscuro) return 'dark'
+    const preferenciaEscuro = window.matchMedia('(preferes-color-scheme: dark)').matches
+    if(preferenciaEscuro) return 'dark'
 
     return 'light'
   })
-
+  
   function alternarTema() {
     setTema(t => (t === 'light' ? 'dark' : 'light'))
   }
@@ -35,9 +37,13 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/materia/:id" element={<Materia />} />
         <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/login" element={<Login />} /> 
+        <Route path='/painel' element={
+          <RotaProtegida>
+            <Painel />
+          </RotaProtegida>
+        } />
       </Routes>
-
-      <Footer />
     </>
   )
 }

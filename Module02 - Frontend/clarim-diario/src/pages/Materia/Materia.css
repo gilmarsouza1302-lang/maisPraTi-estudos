@@ -1,12 +1,13 @@
-.materia {padding: 28px 16px 48px;}
+.materia { padding: 28px 16px 48px; }
 
 .materia__voltar {
-    display: inline-block;
+    display: block;
     font-family: var(--fonte-ui);
     font-size: 13px;
     color: var(--cinza-legenda);
     text-decoration: none;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
+    margin-top: 10px;
 }
 
 .materia__voltar:hover {
@@ -14,6 +15,7 @@
 }
 
 .materia__categoria {
+    display: inline-block;
     font-family: var(--fonte-ui);
     font-size: 12px;
     font-weight: bold;
@@ -30,6 +32,7 @@
     line-height: 1.2;
     margin-bottom: 12px;
 }
+
 .materia__resumo {
     font-size: 20px;
     font-style: italic;
@@ -37,13 +40,14 @@
     margin-bottom: 24px;
     border-bottom: 1px solid var(--tinta);
     padding-bottom: 20px;
-
 }
+
 .materia__texto {
     max-width: 65ch;
     font-size: 18px;
     line-height: 1.8;
 }
+
 .materia__texto p {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }

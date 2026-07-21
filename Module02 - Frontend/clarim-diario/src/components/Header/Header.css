@@ -14,6 +14,28 @@
     padding-bottom: 6px;
 }
 
+.cabecalho__sessao a { color: var(--tinta) }
+
+.cabecalho__entrar {
+    font-family: var(--fonte-ui);
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--urgente);
+    text-decoration: none;
+}
+
+
+.cabecalho__sair {
+    font-family: var(--fonte-ui);
+    font-size: 12px;
+    background: none;
+    border: none;
+    color: var(--urgente);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0
+}
+
 .cabecalho__titulo {
     text-align: center;
     font-style: italic;
@@ -63,7 +85,7 @@
     cursor: pointer;
 }
 
-.cabecalho__link-titulo {
-    text-decoration: none;
-    color: inherit;
+.cabecalho__logo-link {
+  color: inherit;
+  text-decoration: none;
 }

@@ -1,170 +1,87 @@
 import { useState } from 'react'
 import { buscarCep } from '../../services/viacep'
-import './Cadastro.css'
 
 function Cadastro() {
-    const [ form, setForm ] = useState({
-        nome: '',
-        email: '',
-        cep: '',
-        logradouro: '',
-        bairro: '',
-        cidade: '',
-        estado: '',
-        numero: '',
-        complemento: ''
-    })
+  // UM estado-objeto para o formulário inteiro (em vez de 7 useState)
+  const [form, setForm] = useState({
+    nome: '', email: '', cep: '',
+    logradouro: '', numero: '', bairro: '', cidade: '', uf: '',
+  })
+  const [aviso, setAviso] = useState('')   // mensagens de erro/status
 
-    const [ erroCep, setErroCep ] = useState('')
-    const [ buscando, setBuscando ] = useState(false)
-    const [ enviado, setEnviado ] = useState(false)
+  // UMA função genérica atualiza QUALQUER campo:
+  function atualizarCampo(e) {
+    const { id, value } = e.target          // qual input disparou, e seu valor
+    // Regra sagrada: NUNCA modifique o estado — crie um NOVO objeto.
+    // ...f copia todos os campos atuais; [id]: value é uma "chave
+    // computada": se id for "email", sobrescreve o campo email.
+    setForm(f => ({ ...f, [id]: value }))
+  }
 
-    function atualizarCampo(campo, valor) {
-        setForm(formAnterior => ({ ...formAnterior, [campo]: valor }))
+  // onBlur do CEP: busca na ViaCEP e preenche o endereço NO ESTADO
+  async function preencherEndereco() {
+    if (!form.cep) return
+    try {
+      setAviso('Buscando CEP…')             // feedback de carregamento
+      const end = await buscarCep(form.cep)
+      setForm(f => ({
+        ...f,
+        logradouro: end.logradouro,
+        bairro: end.bairro,
+        cidade: end.localidade,             // atenção: a ViaCEP chama cidade de "localidade"
+        uf: end.uf,
+      }))
+      setAviso('')
+    } catch (erro) {
+      setAviso(erro.message)                // "CEP não encontrado." etc.
     }
+  }
 
-    async function aoSairDoCep() {
-        setErroCep('')
+  function enviar(e) {
+    e.preventDefault()                       // o velho conhecido!
+    alert(`Assinatura registrada, ${form.nome}! Bem-vindo ao Clarim.`)
+  }
 
-        if (!form.cep) return
+  return (
+    <main className="container">
+      {/* onSubmit no form = addEventListener('submit') do JS puro */}
+      <form className="formulario" onSubmit={enviar}>
+        <h1>Assine o Clarim</h1>
 
-        try {
-            setBuscando(true)
-            const endereco = await buscarCep(form.cep)
+        <label htmlFor="nome">Nome completo</label>
+        {/* O TRIO do componente controlado:
+            id      → diz à atualizarCampo QUAL campo é
+            value   → o input EXIBE o que está no estado
+            onChange→ cada tecla ATUALIZA o estado */}
+        <input id="nome" value={form.nome} onChange={atualizarCampo} required />
 
-            setForm(formAnterior => ({
-                ...formAnterior,
-                logradouro: endereco.logradouro,
-                bairro: endereco.bairro,
-                cidade: endereco.localidade,
-                estado: endereco.uf
-            }))
-        } catch (erro) {
-            setErroCep(erro.message)
-        } finally {
-            setBuscando(false)
-        }
-    }
+        <label htmlFor="email">E-mail</label>
+        <input id="email" type="email" value={form.email} onChange={atualizarCampo} required />
 
-    function aoEnviar(evento) {
-        evento.preventDefault()
-        console.log('Cadastro enviado:', form)
-        setEnviado(true)
-    }
+        <label htmlFor="cep">CEP</label>
+        {/* onBlur: ao sair do campo, consulta a ViaCEP */}
+        <input id="cep" value={form.cep} onChange={atualizarCampo}
+               onBlur={preencherEndereco} placeholder="00000-000" required />
 
-    if (enviado) {
-        return (
-            <main className="container cadastro">
-                <h1 className="cadastro__titulo">Cadastro realizado!</h1>
-                <p>Obrigado por assinar O Clarim Diário, {form.nome}.</p>
-            </main>
-        )
-    }
+        <label htmlFor="logradouro">Rua</label>
+        <input id="logradouro" value={form.logradouro} onChange={atualizarCampo} />
 
-    return (
-        <main className="container cadastro">
-            <h1 className="cadastro__titulo">Assine O Clarim Diário</h1>
-            <p className="cadastro__subtitulo">Preencha seus dados para receber as notícias em primeira mão.</p>
+        <label htmlFor="bairro">Bairro</label>
+        <input id="bairro" value={form.bairro} onChange={atualizarCampo} />
 
-            <form className="cadastro__form" onSubmit={aoEnviar}>
-                <label className="campo">
-                    Nome completo
-                    <input
-                        type="text"
-                        required
-                        value={form.nome}
-                        onChange={(e) => atualizarCampo('nome', e.target.value)}
-                    />
-                </label>
+        <label htmlFor="cidade">Cidade</label>
+        <input id="cidade" value={form.cidade} onChange={atualizarCampo} />
 
-                <label className="campo">
-                    E-mail
-                    <input
-                        type="email"
-                        required
-                        value={form.email}
-                        onChange={(e) => atualizarCampo('email', e.target.value)}
-                    />
-                </label>
+        <label htmlFor="uf">UF</label>
+        <input id="uf" value={form.uf} onChange={atualizarCampo} maxLength={2} />
 
-                <label className="campo">
-                    CEP
-                    <input
-                        type="text"
-                        required
-                        placeholder="00000-000"
-                        value={form.cep}
-                        onChange={(e) => atualizarCampo('cep', e.target.value)}
-                        onBlur={aoSairDoCep}
-                    />
-                </label>
+        {/* renderização condicional: o aviso só existe se houver texto */}
+        {aviso && <p className="aviso">{aviso}</p>}
 
-                {buscando && <p className="cadastro__aviso">Buscando endereço...</p>}
-                {erroCep && <p className="cadastro__erro">{erroCep}</p>}
-
-                <label className="campo">
-                    Rua
-                    <input
-                        type="text"
-                        value={form.logradouro}
-                        onChange={(e) => atualizarCampo('logradouro', e.target.value)}
-                    />
-                </label>
-
-                <div className="cadastro__linha">
-                    <label className="campo">
-                        Número
-                        <input
-                            type="text"
-                            value={form.numero}
-                            onChange={(e) => atualizarCampo('numero', e.target.value)}
-                        />
-                    </label>
-
-                    <label className="campo">
-                        Complemento
-                        <input
-                            type="text"
-                            value={form.complemento}
-                            onChange={(e) => atualizarCampo('complemento', e.target.value)}
-                        />
-                    </label>
-                </div>
-
-                <label className="campo">
-                    Bairro
-                    <input
-                        type="text"
-                        value={form.bairro}
-                        onChange={(e) => atualizarCampo('bairro', e.target.value)}
-                    />
-                </label>
-
-                <div className="cadastro__linha">
-                    <label className="campo">
-                        Cidade
-                        <input
-                            type="text"
-                            value={form.cidade}
-                            onChange={(e) => atualizarCampo('cidade', e.target.value)}
-                        />
-                    </label>
-
-                    <label className="campo campo--curto">
-                        UF
-                        <input
-                            type="text"
-                            maxLength={2}
-                            value={form.estado}
-                            onChange={(e) => atualizarCampo('estado', e.target.value)}
-                        />
-                    </label>
-                </div>
-
-                <button type="submit" className="cadastro__botao">Assinar agora</button>
-            </form>
-        </main>
-    )
+        <button type="submit">Assinar</button>
+      </form>
+    </main>
+  )
 }
 
 export default Cadastro

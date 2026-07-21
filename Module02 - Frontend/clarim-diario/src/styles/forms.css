@@ -1,0 +1,70 @@
+.formulario {
+  max-width: 460px;
+  margin: 32px auto 48px;      /* auto nas laterais = centralizado */
+  border: 2px solid var(--tinta);
+  padding: 32px;
+  background: var(--papel-card, #fff);   /* usa a variável; se não existir, #fff */
+}
+
+.formulario h1 {
+  font-size: 28px;
+  border-bottom: 3px double var(--tinta);   /* a linha dupla do jornal */
+  padding-bottom: 10px;
+  margin-bottom: 8px;
+}
+
+.formulario label {
+  display: block;               /* cada rótulo na própria linha */
+  font-family: var(--fonte-ui);
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--cinza-legenda);
+  margin: 16px 0 4px;
+}
+
+.formulario input {
+  width: 100%;
+  font-family: var(--fonte-ui);
+  font-size: 15px;
+  padding: 10px;
+  border: 1px solid var(--tinta);
+  background: transparent;      /* herda o fundo do form → funciona nos 2 temas */
+  color: var(--tinta);          /* o texto digitado também acompanha o tema */
+}
+.formulario input:focus {
+  outline: none;
+  border-color: var(--urgente);   /* feedback de campo ativo */
+}
+
+/* O aviso de erro/carregamento (aparece e some via estado) */
+.aviso {
+  font-family: var(--fonte-ui);
+  font-size: 13px;
+  color: var(--urgente);
+  margin-top: 14px;
+}
+
+.formulario button {
+  width: 100%;
+  font-family: var(--fonte-ui);
+  font-size: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: var(--urgente);
+  color: #fff;
+  border: none;
+  padding: 13px;
+  margin-top: 22px;
+  cursor: pointer;
+}
+.formulario button:hover { filter: brightness(1.1); }   /* clareia 10% no hover */
+
+.rodape-form {
+  text-align: center;
+  font-family: var(--fonte-ui);
+  font-size: 14px;
+  margin-top: 16px;
+}
