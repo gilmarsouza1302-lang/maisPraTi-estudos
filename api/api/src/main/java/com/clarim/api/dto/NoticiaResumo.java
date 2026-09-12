@@ -9,6 +9,7 @@ public record NoticiaResumo(
         String slug,
         String resumo,
         String categoria,
+        String texto,
         boolean premium,
         OffsetDateTime publicadaEm
 ) {}

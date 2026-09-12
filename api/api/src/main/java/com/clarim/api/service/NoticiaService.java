@@ -30,6 +30,7 @@ public class NoticiaService {
                 noticia.getSlug(),
                 noticia.getResumo(),
                 noticia.getCategoria().getNome(),
+                noticia.getTexto(),
                 noticia.getPremium(),
                 noticia.getPublicadaEm()
         );

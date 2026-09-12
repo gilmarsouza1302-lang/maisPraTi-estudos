@@ -13,7 +13,7 @@ public class Plano {
     private String nome;
 
     @Column(name = "preco_centavos", nullable = false)
-    private Long precoCentavos;
+    private int precoCentavos;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
@@ -47,11 +47,11 @@ public class Plano {
         this.nome = nome;
     }
 
-    public Long getPrecoCentavos() {
+    public int getPrecoCentavos() {
         return precoCentavos;
     }
 
-    public void setPrecoCentavos(Long precoCentavos) {
+    public void setPrecoCentavos(int precoCentavos) {
         this.precoCentavos = precoCentavos;
     }
 

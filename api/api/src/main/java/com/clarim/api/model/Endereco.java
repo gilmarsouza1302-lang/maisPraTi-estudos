@@ -21,7 +21,7 @@ public class Endereco {
     @Column(length = 100) private String complemento;
     @Column(length = 120) private String bairro;
     @Column(length = 120) private String cidade;
-    @Column(columnDefinition = "CHAR(2)") private String uf;
+    @Column(columnDefinition = "CHAR(2)") private Character uf;
 
     public Endereco() {}
 
@@ -89,11 +89,11 @@ public class Endereco {
         this.cidade = cidade;
     }
 
-    public String getUf() {
+    public Character getUf() {
         return uf;
     }
 
-    public void setUf(String uf) {
+    public void setUf(Character uf) {
         this.uf = uf;
     }
 }
