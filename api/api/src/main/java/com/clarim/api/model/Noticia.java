@@ -3,6 +3,8 @@ package com.clarim.api.model;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "noticia")
@@ -38,6 +40,14 @@ public class Noticia {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "autor_id", nullable = false)
     private Usuario usuario;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "noticia_tag",
+            joinColumns = @JoinColumn(name = "noticia_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
 
     public Noticia() {}
 
@@ -119,5 +129,15 @@ public class Noticia {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public void adicionarTag(Tag tag) {
+        this.tags.add(tag);
+        tag.getNoticias().add(this);
+    }
+
+    public void removerTag(Tag tag) {
+        this.tags.remove(tag);
+        tag.getNoticias().remove(this);
     }
 }
