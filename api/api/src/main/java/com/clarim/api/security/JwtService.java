@@ -1,6 +1,5 @@
 package com.clarim.api.security;
 
-import com.clarim.api.model.Usuario;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
