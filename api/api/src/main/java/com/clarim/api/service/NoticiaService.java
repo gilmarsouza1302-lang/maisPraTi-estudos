@@ -54,17 +54,25 @@ public class NoticiaService {
     }
 
     public NoticiaResponse criar(NoticiaRequest req) {
-        Categoria categoria = categoriaRepository.findById(req.getCategoriaId())
+        Categoria categoria = categoriaRepository.findById(req.categoriaId())
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada"));
 
-        Usuario autor = usuarioRepository.findById(req.getAutorId()).orElseThrow();
+        Usuario autor = usuarioRepository.findById(req.autorId()).orElseThrow();
 
         if(autor.getPapel() == Papel.LEITOR) {
             throw new IllegalArgumentException("Usuário não tem permissão para criar notícias");
         }
 
-        Noticia noticia = new Noticia(req.getTitulo(), req.getSlug(), req.getResumo(), categoria, req.getTexto(), req.getPremium(), autor);
+        Noticia noticia = new Noticia();
+        noticia.setTitulo(req.titulo());
+        noticia.setSlug(req.slug());
+        noticia.setResumo(req.resumo());
+        noticia.setTexto(req.texto());
+        noticia.setPremium(req.premium());
+        noticia.setCategoria(categoria);
+        noticia.setUsuario(autor);
+
         Noticia salva = noticiaRepository.save(noticia);
-        return new NoticiaResponse(noticia.getId(), noticia.getTitulo(), noticia.getSlug(), noticia.getResumo(), noticia.getCategoria().getNome(), noticia.getTexto(), noticia.getPremium(), noticia.getPublicadaEm());
+        return new NoticiaResponse(salva.getId(), noticia.getTitulo(), noticia.getSlug(), noticia.getResumo(), noticia.getTexto(), noticia.getCategoria().getNome(), noticia.getUsuario().getNome(), noticia.getPremium(), noticia.getPublicadaEm());
     }
 }

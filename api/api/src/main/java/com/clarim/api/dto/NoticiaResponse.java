@@ -12,7 +12,6 @@ public record NoticiaResponse(
         String categoria,
         String autor,
         boolean premium,
-        OffsetDateTime publicadaEm,
-        Set<String> tags
+        OffsetDateTime publicadaEm
 ) {
 }

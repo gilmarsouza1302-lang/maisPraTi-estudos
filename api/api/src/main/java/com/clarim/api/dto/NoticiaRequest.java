@@ -22,7 +22,5 @@ public record NoticiaRequest (
         Long categoriaId,
 
         @Positive
-        Long autorId,
-
-        Set<String> tags
+        Long autorId
 ){}
